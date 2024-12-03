@@ -240,5 +240,15 @@ namespace DatabaseAmusementParkProject.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("reviews/user/{userId}")]
+        public IActionResult GetReviewsByUserId(Guid userId)
+        {
+            var reviews = _context.ThemeParks_Review
+                .Where(tpr => tpr.UserId == userId)
+                .ToList();
+            return Ok(reviews);
+        }
+
     }
 }
