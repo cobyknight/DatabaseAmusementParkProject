@@ -20,7 +20,7 @@ namespace DatabaseAmusementParkProject.Controllers
 
         // POST: api/User/create
         [HttpPost("create")]
-        public async Task<IActionResult> CreateUserIfUniqueAsync([FromBody] string username)
+        public async Task<IActionResult> CreateUserIfUniqueAsync([FromQuery] string username)
         {
             if (string.IsNullOrWhiteSpace(username))
             {
