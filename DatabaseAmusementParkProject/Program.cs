@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DatabaseAmusementParkProject.Data; // Replace with your actual namespace
+using DatabaseAmusementParkProject.Service; // Import your ParkService and UserService
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,10 @@ builder.Services.AddControllers();
 // Register AppDbContext with PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register UserService and ParkService
+builder.Services.AddScoped<UserService>(); // Register UserService for Dependency Injection
+builder.Services.AddScoped<ParkService>(); // Register ParkService for Dependency Injection
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
