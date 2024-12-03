@@ -195,5 +195,50 @@ namespace DatabaseAmusementParkProject.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetParksBySearch")]
+        public IActionResult SearchParks(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest("Search term cannot be empty.");
+            }
+
+            // Perform a case-insensitive search
+            var matchingParks = _context.ThemeParks
+                .Where(tp => EF.Functions.Like(tp.Name, $"%{searchTerm}%"))
+                .ToList();
+
+            if (!matchingParks.Any())
+            {
+                return NotFound("No parks found matching the search term.");
+            }
+
+            var result = new List<ParkDTO>();
+
+            foreach (var park in matchingParks)
+            {
+                var locations = _context.ThemeParks_Locations
+                    .Where(tpl => tpl.ThemeParkId == park.Id)
+                    .ToList();
+
+                foreach (var location in locations)
+                {
+                    var locationName = _context.Locations
+                        .Where(l => l.id == location.LocationId)
+                        .Select(l => l.name)
+                        .FirstOrDefault();
+
+                    result.Add(new ParkDTO
+                    {
+                        ParkName = park.Name,
+                        ParkLocation = locationName,
+                        ParkId = park.Id,
+                        ParkLocationId = location.Id
+                    });
+                }
+            }
+
+            return Ok(result);
+        }
     }
 }
