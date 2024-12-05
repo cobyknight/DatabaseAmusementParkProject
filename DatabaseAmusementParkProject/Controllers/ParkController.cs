@@ -247,7 +247,36 @@ namespace DatabaseAmusementParkProject.Controllers
             var reviews = _context.ThemeParks_Review
                 .Where(tpr => tpr.UserId == userId)
                 .ToList();
-            return Ok(reviews);
+
+            var result = new List<ReviewDTO>();
+
+            foreach (var review in reviews)
+            {
+                var themeParkLocation = _context.ThemeParks_Locations
+                    .FirstOrDefault(tpl => tpl.Id == review.ThemeParkLocationId);
+
+                if (themeParkLocation != null)
+                {
+                    var themePark = _context.ThemeParks
+                        .FirstOrDefault(tp => tp.Id == themeParkLocation.ThemeParkId);
+
+                    if (themePark != null)
+                    {
+                        result.Add(new ReviewDTO
+                        {
+                            ReviewId = review.Id,
+                            UserId = review.UserId,
+                            Comment = review.Comment,
+                            Rating = review.Rating,
+                            ThemeParkId = themePark.Id,
+                            ThemeParkLocationId = themeParkLocation.Id,
+                            ThemeParkName = themePark.Name
+                        });
+                    }
+                }
+            }
+
+            return Ok(result);
         }
 
     }
