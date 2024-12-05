@@ -22,6 +22,5 @@ namespace DatabaseAmusementParkProject.Data
         public DbSet<ThemePark_Location> ThemeParks_Locations { get; set; }
         public DbSet<ThemePark_Reviews> ThemeParks_Review {  get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<User_Favorites> User_Favorites { get; set; }
     }
 }
